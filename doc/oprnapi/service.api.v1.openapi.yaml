@@ -35,8 +35,7 @@ paths:
       tags:
         - external scripts usage
       summary: get data version from site
-      description: get version and date now  from site id
-      operationId: uuid
+      description: get version and date now from site id
       responses:
         '200':
           description: Successful operation
@@ -44,9 +43,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Site'
-        '405':
+        '400':
           description: Invalid input
-    post:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /api/v1/siteDataPatternsList/{siteId}:
+    get:
       parameters:
         - name: siteId
           in: path
@@ -58,38 +62,21 @@ paths:
           example: ec9fb65e-d858-40bc-a296-672debf7214c
       tags:
         - external scripts usage
-      summary: Add a new pet to the store
-      description: Add a new pet to the store
-      operationId: addPet
-      requestBody:
-        description: Create a new pet in the store
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Site'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Pet'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Pet'
-        required: true
+      summary: get data version from site
+      description: get version and date now  from site id
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Pet'
-        '405':
+                $ref: '#/components/schemas/PatternsList'
+        '400':
           description: Invalid input
-      security:
-        - petstore_auth:
-            - write:pets
-            - read:pets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Site:
@@ -100,11 +87,46 @@ components:
           example: guid
         dateGetting:
           type: string
-          example: дата получения
+          example: date of receipt of the version data
+          format: date-time
         version:
           type: integer
           format: int32
           example: 12
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        errorDescription:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                example: not found fieldName
+              fields:
+                type: object
+                properties:
+                  siteId:
+                    type: string
+                    example: not found
+    PatternsList:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            example: uuid
+            description: id site pattern
+            format: uuid
+          pagePattern:
+            type: string
+            example: /category/*/product/*
+            description: a regular expression that defines a list of suggestions for a given page
     Order:
       type: object
       properties:
