@@ -77,6 +77,34 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /api/v1/tooltip/{patternId}:
+    get:
+      parameters:
+        - name: patternId
+          in: path
+          description: ID of the page pattern
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: ec9fb65e-d858-40bc-a296-672debf7214c
+      tags:
+        - external scripts usage
+      summary: getting information about suggestions for a page
+      description: getting information about suggestions for the selected page
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Site:
